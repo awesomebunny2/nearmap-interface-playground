@@ -10,6 +10,7 @@ import {
     AppBar,
     TextField,
     Card,
+    Divider,
     Checkbox,
     ToggleButton,
     ToggleButtonGroup,
@@ -155,7 +156,9 @@ function App() {
         });
     };
 
-    const hasCapValue = cap !== "" && cap !== "0";
+    const capNumber = Number(cap);
+    const hasCapValue = Number.isFinite(capNumber) && capNumber > 0;
+    const isSingleRecord = capNumber === 1;
     const isCapped = hasCapValue;
     const capStrongColor = "rgb(255, 165, 0)";
     const capSoftColor = "rgba(255, 165, 0, 0.7)";
@@ -241,8 +244,8 @@ function App() {
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0} style={{ flexGrow: 1, width: "100%", minHeight: 0, display: "flex" }}>
-                    <Box sx={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", gap: 2, minHeight: 0 }}>
-                        <Box sx={{ px: 2 }}>
+                    <Box sx={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}>
+                        <Box sx={{ px: 2 , pb: 2 }}>
                             <Box
                                 sx={(theme) => ({
                                     display: "flex",
@@ -335,8 +338,10 @@ function App() {
                             </Box>
                         </Box>
 
-                        <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2, minHeight: 0 }}>
-                            <Stack spacing={2} sx={{ overflow: "visible" }}>
+                        <Divider sx={{ mx: 2, height: 2, bgcolor: "divider" }} />
+
+                        <Box sx={{ flexGrow: 1, overflowY: "auto", pt: 2, px: 2, pb: 0, minHeight: 0 }}>
+                            <Stack spacing={2} sx={{ overflow: "visible", mb: 3 }}>
                             {cardItems.map((item, index) => {
                                 const state = selectedCards[index];
                                 const isIncluded = state === "include";
@@ -513,12 +518,15 @@ function App() {
                             </Stack>
                         </Box>
 
+                        <Divider sx={{ mx: 2, height: 2, mb: 2, bgcolor: "divider" }} />
+
                         <Box
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
                                 gap: 1,
                                 px: 2,
+                                mt: 1,
                             }}
                         >
                             <Box
@@ -527,7 +535,9 @@ function App() {
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                     width: "100%",
-                                    [theme.breakpoints.down(644)]: {
+                                    mb: 2,
+                                    gap: 2,
+                                    [theme.breakpoints.down(775)]: {
                                         flexDirection: "column",
                                         alignItems: "stretch",
                                         gap: 1,
@@ -539,7 +549,8 @@ function App() {
                                         display: "flex",
                                         alignItems: "center",
                                         gap: 1,
-                                        [theme.breakpoints.down(644)]: {
+                                        flex: 1,
+                                        [theme.breakpoints.down(775)]: {
                                             width: "100%",
                                         },
                                     })}
@@ -553,10 +564,12 @@ function App() {
                                         type="text"
                                         inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                                         size="small"
-                                        sx={{
-                                            width: "250px",
-                                            [theme.breakpoints.down(644)]: {
-                                                width: "100%",
+                                        sx={(theme) => ({
+                                            width: hasCapValue ? "250px" : "100%",
+                                            flexGrow: 1,
+                                            minWidth: hasCapValue ? "250px" : 0,
+                                            [theme.breakpoints.down(775)]: {
+                                                width: hasCapValue ? "calc(100% - 90px)" : "100%",
                                             },
                                             "& .MuiInputLabel-root.Mui-focused": {
                                                 color: capStrongColor,
@@ -570,23 +583,27 @@ function App() {
                                             "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
                                                 borderColor: hasCapValue && !isCapFocused ? capOutlineSoftColor : undefined,
                                             },
-                                        }}
+                                        })}
                                     />
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            opacity: hasCapValue ? 1 : 0,
-                                            transform: hasCapValue ? "translateX(0)" : "translateX(-6px)",
-                                            transition: "opacity 180ms ease, transform 180ms ease",
-                                            color: isCapFocused ? capStrongColor : capSoftColor,
-                                            fontSize: "0.95rem",
-                                            fontWeight: 600,
-                                            pointerEvents: "none",
-                                            whiteSpace: "nowrap",
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        display: "inline-flex",
+                                        maxWidth: hasCapValue ? (isSingleRecord ? 70 : 90) : 0,
+                                        opacity: hasCapValue ? 1 : 0,
+                                        marginLeft: hasCapValue ? 1 : 0,
+                                        transform: hasCapValue ? "translateX(0)" : "translateX(-6px)",
+                                        transition: "opacity 250ms ease, transform 250ms ease, max-width 250ms ease, margin-left 250ms ease",
+                                        overflow: "hidden",
+                                        color: isCapFocused ? capStrongColor : capSoftColor,
+                                        fontSize: "0.95rem",
+                                        fontWeight: 600,
+                                        pointerEvents: "none",
+                                        whiteSpace: "nowrap",
                                         }}
                                     >
-                                        {cap === "1" ? "record" : "records"}
-                                    </Typography>
+                                    {isSingleRecord ? "record" : "records"}
+                                </Typography>
                                 </Box>
                                 <Typography
                                     variant="body1"
@@ -595,7 +612,7 @@ function App() {
                                         color: "text.secondary",
                                         fontSize: "1.5rem",
                                         textAlign: "right",
-                                        [theme.breakpoints.down(644)]: {
+                                        [theme.breakpoints.down(775)]: {
                                             textAlign: "center",
                                         },
                                     }}
