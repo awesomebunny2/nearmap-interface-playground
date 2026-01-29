@@ -38,6 +38,308 @@ const cardItems = [
     'Tile Or Shingle Staining',
     'Roof Staining',
 ];
+const tiers = ["Tier 1", "Tier 2", "Tier 3", "Tier 4"];
+
+function CardListSection({ items, selectedCards, onToggle, filterMode = "include" }) {
+    return (
+        <Box sx={{ flexGrow: 1, overflowY: "auto", pt: 2, px: 2, pb: 0, minHeight: 0 }}>
+            <Stack spacing={2} sx={{ overflow: "visible" }}>
+                {items.map((item, index) => {
+                    const state = selectedCards[index];
+                    const isIncluded = state === "include";
+                    const isExcluded = state === "exclude";
+                    const hoverGlow = filterMode === "include"
+                        ? "rgba(22, 163, 74, 0.12)"
+                        : "rgba(220, 38, 38, 0.12)";
+
+                    return (
+                        <Card
+                            key={`${item}-${index}`}
+                            variant="elevation"
+                            elevation={0}
+                            onClick={() => onToggle(index)}
+                            sx={(theme) => ({
+                                height: 60,
+                                maxHeight: 60,
+                                flexShrink: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                position: "relative",
+                                px: 1.5,
+                                gap: 0.75,
+                                cursor: "pointer",
+                                border: "none",
+                                backgroundColor: isIncluded
+                                    ? "rgba(22, 163, 74, 0.08)"
+                                    : isExcluded
+                                    ? "rgba(220, 38, 38, 0.08)"
+                                    : "background.paper",
+                                boxShadow: "0 1px 4px rgba(0, 0, 0, 0.12)",
+                                transition: "transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease",
+                                "&:hover": {
+                                    transform: "translateY(-2px)",
+                                    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.16), 0 0 0 1px ${hoverGlow}`,
+                                    backgroundColor:
+                                        filterMode === "include"
+                                            ? "rgba(22, 163, 74, 0.04)"
+                                            : "rgba(220, 38, 38, 0.04)",
+                                },
+                                [theme.breakpoints.down(699)]: {
+                                    flexDirection: "column",
+                                    alignItems: "stretch",
+                                    height: "auto",
+                                    maxHeight: "none",
+                                    py: 1,
+                                },
+                                [theme.breakpoints.down(500)]: {
+                                    gap: 0.75,
+                                },
+                            })}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                                <Checkbox
+                                    checked={selectedCards[index] !== "none"}
+                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                    checkedIcon={
+                                        isIncluded
+                                            ? <CheckCircleOutlineIcon sx={{ color: "#16a34a" }} fontSize="small" />
+                                            : <CancelOutlinedIcon sx={{ color: "#dc2626" }} fontSize="small" />
+                                    }
+                                    onChange={() => onToggle(index)}
+                                    onClick={(event) => event.stopPropagation()}
+                                    size="small"
+                                />
+                                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{ fontWeight: 700, maxWidth: 200, whiteSpace: "normal" }}
+                                    >
+                                        {item}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box
+                                sx={(theme) => ({
+                                    ml: "auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "flex-end",
+                                    justifyContent: "center",
+                                    gap: 0.25,
+                                    [theme.breakpoints.down(699)]: {
+                                        width: "100%",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        mt: -1,
+                                        gap: 4,
+                                    },
+                                    [theme.breakpoints.down(500)]: {
+                                        gap: 2.5,
+                                    },
+                                    [theme.breakpoints.up(1000)]: {
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: 1.5,
+                                    },
+                                })}
+                            >
+                                <Typography
+                                    variant="caption"
+                                    sx={(theme) => ({
+                                        fontWeight: 500,
+                                        color: "text.secondary",
+                                        opacity: 0.75,
+                                        [theme.breakpoints.down(699)]: {
+                                            position: "static",
+                                            transform: "none",
+                                            textAlign: "left",
+                                        },
+                                        [theme.breakpoints.down(500)]: {
+                                            maxWidth: 110,
+                                            textAlign: "center",
+                                            whiteSpace: "normal",
+                                        },
+                                        [theme.breakpoints.up(1000)]: {
+                                            position: "absolute",
+                                            left: "65%",
+                                            top: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            textAlign: "center",
+                                        },
+                                    })}
+                                >
+                                    Total:{" "}
+                                    <Box
+                                        component="span"
+                                        sx={(theme) => ({
+                                            fontWeight: 600,
+                                            color: "text.secondary",
+                                            fontSize: "0.75rem",
+                                            [theme.breakpoints.down(500)]: {
+                                                display: "block",
+                                            },
+                                        })}
+                                    >
+                                        70,000
+                                    </Box>
+                                </Typography>
+                                <Typography
+                                    variant="caption"
+                                    sx={(theme) => ({
+                                        fontWeight: 600,
+                                        color: "text.secondary",
+                                        whiteSpace: "nowrap",
+                                        [theme.breakpoints.up(1000)]: {
+                                            textAlign: "right",
+                                        },
+                                        [theme.breakpoints.down(500)]: {
+                                            whiteSpace: "normal",
+                                            maxWidth: 120,
+                                            textAlign: "center",
+                                        },
+                                    })}
+                                >
+                                    Available To Add:{" "}
+                                    <Box
+                                        component="span"
+                                        sx={{
+                                            fontWeight: 800,
+                                            color: isIncluded ? "#16a34a" : isExcluded ? "#dc2626" : "text.primary",
+                                            fontSize: "0.875rem",
+                                            [theme.breakpoints.down(500)]: {
+                                                display: "block",
+                                            },
+                                        }}
+                                    >
+                                        +50,000
+                                    </Box>
+                                </Typography>
+                            </Box>
+                        </Card>
+                    );
+                })}
+            </Stack>
+        </Box>
+    );
+}
+
+function BottomSection({
+    cap,
+    handleCapChange,
+    isCapFocused,
+    setIsCapFocused,
+    hasCapValue,
+    isSingleRecord,
+    capStrongColor,
+    capSoftColor,
+    capOutlineSoftColor,
+}) {
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, px: 2, mt: 1 }}>
+            <Box
+                sx={(theme) => ({
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    mb: 2,
+                    [theme.breakpoints.down(745)]: {
+                        flexDirection: "column",
+                        alignItems: "stretch",
+                        gap: 1,
+                    },
+                })}
+            >
+                <Box
+                    sx={(theme) => ({
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        flex: 1,
+                        [theme.breakpoints.down(775)]: {
+                            width: "100%",
+                        },
+                    })}
+                >
+                    <TextField
+                        label="Cap"
+                        value={cap}
+                        onChange={handleCapChange}
+                        onFocus={() => setIsCapFocused(true)}
+                        onBlur={() => setIsCapFocused(false)}
+                        type="text"
+                        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                        size="small"
+                        sx={(theme) => ({
+                            width: hasCapValue ? "250px" : "100%",
+                            flexGrow: 1,
+                            minWidth: hasCapValue ? "250px" : 0,
+                            [theme.breakpoints.down(775)]: {
+                                width: hasCapValue ? "calc(100% - 90px)" : "100%",
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                                color: capStrongColor,
+                            },
+                            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: capStrongColor,
+                            },
+                            "& .MuiInputLabel-root": {
+                                color: hasCapValue && !isCapFocused ? capSoftColor : undefined,
+                            },
+                            "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                                borderColor: hasCapValue && !isCapFocused ? capOutlineSoftColor : undefined,
+                            },
+                        })}
+                    />
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            display: "inline-flex",
+                            maxWidth: hasCapValue ? (isSingleRecord ? 70 : 90) : 0,
+                            opacity: hasCapValue ? 1 : 0,
+                            marginLeft: hasCapValue ? 1 : 0,
+                            transform: hasCapValue ? "translateX(0)" : "translateX(-6px)",
+                            transition: "opacity 500ms ease, transform 500ms ease, max-width 500ms ease, margin-left 500ms ease",
+                            overflow: "hidden",
+                            color: isCapFocused ? capStrongColor : capSoftColor,
+                            fontSize: "0.95rem",
+                            fontWeight: 600,
+                            pointerEvents: "none",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        {isSingleRecord ? "record" : "records"}
+                    </Typography>
+                </Box>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        fontWeight: 600,
+                        color: "text.secondary",
+                        fontSize: "1.5rem",
+                        textAlign: "right",
+                        [theme.breakpoints.down(745)]: {
+                            textAlign: "center",
+                        },
+                    }}
+                >
+                    Running Total:{" "}
+                    <Box component="span" sx={{ fontWeight: 600, color: "text.primary", fontSize: "inherit" }}>
+                        100,000
+                    </Box>
+                </Typography>
+            </Box>
+            <Button
+                variant="contained"
+                onClick={() => console.log("Export")}
+                sx={{ width: "100%", alignSelf: "center" }}
+            >
+                Export
+            </Button>
+        </Box>
+    );
+}
 
 function TabPanel({value, index, children, ...other}) {
     return (
@@ -79,8 +381,10 @@ function App() {
 
     const [value, setValue] = useState(0);
     const [cap, setCap] = useState("");
+    const [capTwo, setCapTwo] = useState("");
     const [filterMode, setFilterMode] = useState("include");
     const [isCapFocused, setIsCapFocused] = useState(false);
+    const [isCapTwoFocused, setIsCapTwoFocused] = useState(false);
 
     const handleFilterMode = (event, newMode) => {
         if (newMode !== null) {
@@ -131,23 +435,26 @@ function App() {
     const [selectedCards, setSelectedCards] = useState(
         () => Array.from({ length: cardItems.length }, () => "none")
     );
+    const [selectedTiers, setSelectedTiers] = useState(
+        () => Array.from({ length: tiers.length }, () => "none")
+    );
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const handleCapChange = (event) => {
+    const handleCapChange = (setter) => (event) => {
         const nextValue = event.target.value;
         if (nextValue === "" || /^\d+$/.test(nextValue)) {
-            setCap(nextValue);
+            setter(nextValue);
         }
     };
 
-    const toggleCard = (index) => {
-        setSelectedCards((prev) => {
+    const toggleCard = (setter, mode) => (index) => {
+        setter((prev) => {
             const next = [...prev];
             const current = next[index];
-            if (filterMode === "include") {
+            if (mode === "include") {
                 next[index] = current === "include" ? "none" : "include";
             } else {
                 next[index] = current === "exclude" ? "none" : "exclude";
@@ -157,9 +464,11 @@ function App() {
     };
 
     const capNumber = Number(cap);
+    const capTwoNumber = Number(capTwo);
     const hasCapValue = Number.isFinite(capNumber) && capNumber > 0;
+    const hasCapTwoValue = Number.isFinite(capTwoNumber) && capTwoNumber > 0;
     const isSingleRecord = capNumber === 1;
-    const isCapped = hasCapValue;
+    const isSingleRecordTwo = capTwoNumber === 1;
     const capStrongColor = "rgb(255, 165, 0)";
     const capSoftColor = "rgba(255, 165, 0, 0.7)";
     const capOutlineSoftColor = "rgba(255, 165, 0, 0.5)";
@@ -170,6 +479,13 @@ function App() {
             return Array.from({ length: cardItems.length }, (_, index) => prev[index] ?? "none");
         });
     }, [cardItems.length]);
+
+    useEffect(() => {
+        setSelectedTiers((prev) => {
+            if (prev.length === tiers.length) return prev;
+            return Array.from({ length: tiers.length }, (_, index) => prev[index] ?? "none");
+        });
+    }, [tiers.length]);
 
     return (
         <Box
@@ -340,313 +656,50 @@ function App() {
 
                         <Divider sx={{ mx: 2, height: 2, bgcolor: "divider" }} />
 
-                        <Box sx={{ flexGrow: 1, overflowY: "auto", pt: 2, px: 2, pb: 0, minHeight: 0 }}>
-                            <Stack spacing={2} sx={{ overflow: "visible", mb: 3 }}>
-                            {cardItems.map((item, index) => {
-                                const state = selectedCards[index];
-                                const isIncluded = state === "include";
-                                const isExcluded = state === "exclude";
-                                const accent = isIncluded ? "#16a34a" : isExcluded ? "#dc2626" : "#d1d5db";
-                                const hoverGlow = filterMode === "include"
-                                    ? "rgba(22, 163, 74, 0.12)"
-                                    : "rgba(220, 38, 38, 0.12)";
+                        <CardListSection
+                            items={cardItems}
+                            selectedCards={selectedCards}
+                            onToggle={toggleCard(setSelectedCards, filterMode)}
+                            filterMode={filterMode}
+                        />
 
-                                return (
-                                    <Card
-                                        key={`card-${index}`}
-                                        variant="elevation"
-                                        elevation={0}
-                                        onClick={() => toggleCard(index)}
-                                        sx={(theme) => ({
-                                            height: 60,
-                                            maxHeight: 60,
-                                            flexShrink: 0,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            position: "relative",
-                                            px: 1.5,
-                                            gap: 0.75,
-                                            cursor: "pointer",
-                                            border: "none",
-                                            backgroundColor: isIncluded
-                                                ? "rgba(22, 163, 74, 0.08)"
-                                                : isExcluded
-                                                ? "rgba(220, 38, 38, 0.08)"
-                                                : "background.paper",
-                                            boxShadow: "0 1px 4px rgba(0, 0, 0, 0.12)",
-                                            transition: "transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease",
-                                            "&:hover": {
-                                                transform: "translateY(-2px)",
-                                                boxShadow: `0 4px 12px rgba(0, 0, 0, 0.16), 0 0 0 1px ${hoverGlow}`,
-                                                backgroundColor:
-                                                    filterMode === "include"
-                                                        ? "rgba(22, 163, 74, 0.04)"
-                                                        : "rgba(220, 38, 38, 0.04)",
-                                            },
-                                            [theme.breakpoints.down(699)]: {
-                                                flexDirection: "column",
-                                                alignItems: "stretch",
-                                                height: "auto",
-                                                maxHeight: "none",
-                                                py: 1,
-                                            },
-                                        })}
-                                    >
-                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                                        <Checkbox
-                                            checked={selectedCards[index] !== "none"}
-                                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                            checkedIcon={
-                                                isIncluded
-                                                    ? <CheckCircleOutlineIcon sx={{ color: "#16a34a" }} fontSize="small" />
-                                                    : <CancelOutlinedIcon sx={{ color: "#dc2626" }} fontSize="small" />
-                                            }
-                                            onChange={() => toggleCard(index)}
-                                            onClick={(event) => event.stopPropagation()}
-                                            size="small"
-                                        />
-                                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                            <Typography
-                                                variant="subtitle2"
-                                                sx={{ fontWeight: 700, maxWidth: 200, whiteSpace: "normal" }}
-                                            >
-                                                {item}
-                                            </Typography>
-                                        </Box>
-                                        </Box>
-                                        <Box
-                                            sx={(theme) => ({
-                                                ml: "auto",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                alignItems: "flex-end",
-                                                justifyContent: "center",
-                                                gap: 0.25,
-                                                [theme.breakpoints.down(699)]: {
-                                                    width: "100%",
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    mt: -1,
-                                                    gap: 4,
-                                                },
-                                                [theme.breakpoints.down(500)]: {
-                                                    gap: 2.5,
-                                                },
-                                                [theme.breakpoints.up(1000)]: {
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    gap: 1.5,
-                                                },
-                                            })}
-                                        >
-                                            <Typography
-                                                variant="caption"
-                                                sx={(theme) => ({
-                                                    fontWeight: 500,
-                                                    color: "text.secondary",
-                                                    opacity: 0.75,
-                                                    [theme.breakpoints.down(699)]: {
-                                                        position: "static",
-                                                        transform: "none",
-                                                        textAlign: "left",
-                                                    },
-                                                    [theme.breakpoints.down(500)]: {
-                                                        maxWidth: 110,
-                                                        textAlign: "center",
-                                                        whiteSpace: "normal",
-                                                    },
-                                                    [theme.breakpoints.up(1000)]: {
-                                                        position: "absolute",
-                                                        left: "65%",
-                                                        top: "50%",
-                                                        transform: "translate(-50%, -50%)",
-                                                        textAlign: "center",
-                                                    },
-                                                })}
-                                            >
-                                                Total:{" "}
-                                                <Box
-                                                    component="span"
-                                                    sx={(theme) => ({
-                                                        fontWeight: 600,
-                                                        color: "text.secondary",
-                                                        fontSize: "0.75rem",
-                                                        [theme.breakpoints.down(500)]: {
-                                                            display: "block",
-                                                        },
-                                                    })}
-                                                >
-                                                    70,000
-                                                </Box>
-                                            </Typography>
-                                            <Typography
-                                                variant="caption"
-                                                sx={(theme) => ({
-                                                    fontWeight: 600,
-                                                    color: "text.secondary",
-                                                    whiteSpace: "nowrap",
-                                                    [theme.breakpoints.up(1000)]: {
-                                                        textAlign: "right",
-                                                    },
-                                                    [theme.breakpoints.down(500)]: {
-                                                        whiteSpace: "normal",
-                                                        maxWidth: 120,
-                                                        textAlign: "center",
-                                                    },
-                                                })}
-                                            >
-                                                Available To Add:{" "}
-                                                <Box
-                                                    component="span"
-                                                    sx={{
-                                                        fontWeight: 800,
-                                                        color: isIncluded ? "#16a34a" : isExcluded ? "#dc2626" : "text.primary",
-                                                        fontSize: "0.875rem",
-                                                        [theme.breakpoints.down(500)]: {
-                                                            display: "block",
-                                                        },
-                                                    }}
-                                                >
-                                                    +50,000
-                                                </Box>
-                                            </Typography>
-                                        </Box>
-                                    </Card>
-                                );
-                            })}
-                            </Stack>
-                        </Box>
+                        <Divider sx={{ mx: 2, mb: 2, height: 2, bgcolor: "divider" }} />
 
-                        <Divider sx={{ mx: 2, height: 2, mb: 2, bgcolor: "divider" }} />
-
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                                px: 2,
-                                mt: 1,
-                            }}
-                        >
-                            <Box
-                                sx={(theme) => ({
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    width: "100%",
-                                    mb: 2,
-                                    gap: 2,
-                                    [theme.breakpoints.down(775)]: {
-                                        flexDirection: "column",
-                                        alignItems: "stretch",
-                                        gap: 1,
-                                    },
-                                })}
-                            >
-                                <Box
-                                    sx={(theme) => ({
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1,
-                                        flex: 1,
-                                        [theme.breakpoints.down(775)]: {
-                                            width: "100%",
-                                        },
-                                    })}
-                                >
-                                    <TextField
-                                        label="Cap"
-                                        value={cap}
-                                        onChange={handleCapChange}
-                                        onFocus={() => setIsCapFocused(true)}
-                                        onBlur={() => setIsCapFocused(false)}
-                                        type="text"
-                                        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                                        size="small"
-                                        sx={(theme) => ({
-                                            width: hasCapValue ? "250px" : "100%",
-                                            flexGrow: 1,
-                                            minWidth: hasCapValue ? "250px" : 0,
-                                            [theme.breakpoints.down(775)]: {
-                                                width: hasCapValue ? "calc(100% - 90px)" : "100%",
-                                            },
-                                            "& .MuiInputLabel-root.Mui-focused": {
-                                                color: capStrongColor,
-                                            },
-                                            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: capStrongColor,
-                                            },
-                                            "& .MuiInputLabel-root": {
-                                                color: hasCapValue && !isCapFocused ? capSoftColor : undefined,
-                                            },
-                                            "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: hasCapValue && !isCapFocused ? capOutlineSoftColor : undefined,
-                                            },
-                                        })}
-                                    />
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        display: "inline-flex",
-                                        maxWidth: hasCapValue ? (isSingleRecord ? 70 : 90) : 0,
-                                        opacity: hasCapValue ? 1 : 0,
-                                        marginLeft: hasCapValue ? 1 : 0,
-                                        transform: hasCapValue ? "translateX(0)" : "translateX(-6px)",
-                                        transition: "opacity 250ms ease, transform 250ms ease, max-width 250ms ease, margin-left 250ms ease",
-                                        overflow: "hidden",
-                                        color: isCapFocused ? capStrongColor : capSoftColor,
-                                        fontSize: "0.95rem",
-                                        fontWeight: 600,
-                                        pointerEvents: "none",
-                                        whiteSpace: "nowrap",
-                                        }}
-                                    >
-                                    {isSingleRecord ? "record" : "records"}
-                                </Typography>
-                                </Box>
-                                <Typography
-                                    variant="body1"
-                                    sx={{
-                                        fontWeight: 600,
-                                        color: "text.secondary",
-                                        fontSize: "1.5rem",
-                                        textAlign: "right",
-                                        [theme.breakpoints.down(775)]: {
-                                            textAlign: "center",
-                                        },
-                                    }}
-                                >
-                                    Running Total:{" "}
-                                    <Box component="span" sx={{ fontWeight: 600, color: "text.primary", fontSize: "inherit" }}>
-                                        100,000
-                                    </Box>
-                                </Typography>
-                            </Box>
-                            <Button
-                                variant="contained"
-                                onClick={() => console.log("Export")}
-                                sx={{ width: "100%", alignSelf: "center" }}
-                            >
-                                Export
-                            </Button>
-                        </Box>
+                        <BottomSection
+                            cap={cap}
+                            handleCapChange={handleCapChange(setCap)}
+                            isCapFocused={isCapFocused}
+                            setIsCapFocused={setIsCapFocused}
+                            hasCapValue={hasCapValue}
+                            isSingleRecord={isSingleRecord}
+                            capStrongColor={capStrongColor}
+                            capSoftColor={capSoftColor}
+                            capOutlineSoftColor={capOutlineSoftColor}
+                        />
                     </Box>
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ flexGrow: 1 }}>
-                    <Stack spacing={2}>
-                        <Typography variant="h4">
-                            Method poo 💩
-                        </Typography>
+                    <Box sx={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}>
+                        <CardListSection
+                            items={tiers}
+                            selectedCards={selectedTiers}
+                            onToggle={toggleCard(setSelectedTiers, "include")}
+                        />
 
-                        <Button variant="contained">
-                            Contained Button
-                        </Button>
+                        <Divider sx={{ mx: 2, height: 2, bgcolor: "divider" }} />
 
-                        <Button variant="outlined">
-                            Outlined Button
-                        </Button>
-                    </Stack>
+                        <BottomSection
+                            cap={capTwo}
+                            handleCapChange={handleCapChange(setCapTwo)}
+                            isCapFocused={isCapTwoFocused}
+                            setIsCapFocused={setIsCapTwoFocused}
+                            hasCapValue={hasCapTwoValue}
+                            isSingleRecord={isSingleRecordTwo}
+                            capStrongColor={capStrongColor}
+                            capSoftColor={capSoftColor}
+                            capOutlineSoftColor={capOutlineSoftColor}
+                        />
+                    </Box>
                 </TabPanel>
             </Paper>
         </Box>
