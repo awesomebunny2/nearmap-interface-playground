@@ -42,7 +42,7 @@ const tiers = ["Tier 1", "Tier 2", "Tier 3", "Tier 4"];
 
 function CardListSection({ items, selectedCards, onToggle, filterMode = "include" }) {
     return (
-        <Box sx={{ flexGrow: 1, overflowY: "auto", pt: 2, px: 2, pb: 0, minHeight: 0 }}>
+        <Box sx={{ flexGrow: 1, overflowY: "auto", py: 3, px: 2, minHeight: 0 }}>
             <Stack spacing={2} sx={{ overflow: "visible" }}>
                 {items.map((item, index) => {
                     const state = selectedCards[index];
@@ -508,6 +508,7 @@ function App() {
                     boxSizing: "border-box",
                     display: "flex",
                     flexDirection: "column",
+                    maxWidth: 1200,
                     borderRadius: (theme.vars || theme).shape.borderRadius * 2,
                 }}
             >
